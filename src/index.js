@@ -67,23 +67,19 @@ program
   .description('Use colored ANSI text at <art_path> to say something.\n' +
     '\'truesay say -h\' for help')
   .option('-t, --text <value>', 'Text to say. If omitted, stdin is used')
+  .option('-b, --box <value>', 'Box type: round (default), single, double, single-double, double-single, classic')
   .option('-w, --width <number>', 'Width (default: 80)', parseInt)
-  .option('-p, --position <value>', 'Text bubble position: \'top\' (default) or \'right\'')
+  .option('-p, --position <value>', 'Text box position: \'top\' (default) or \'right\'')
   .option('-m, --margin <value>', 'Margin between art and text if position = \'right\' (default: 0)', parseInt)
   .action(function (artPath, cmdObj) {
     const text = cmdObj.text || fs.readFileSync(0).toString()
-    const width = cmdObj.width || 80
+    const boxType = cmdObj.box || 'round'
+    const boxWidth = cmdObj.width || 80
     const position = cmdObj.position || 'top'
     const margin = cmdObj.margin || 0
     const type = mime(artPath)
     const callback = (art) => {
-      const output = build({
-        art,
-        text,
-        position,
-        margin,
-        bubbleOptions: { boxWidth: width, boxType: "double" }
-      })
+      const output = build({ art, text, position, margin, bubbleOptions: { boxWidth, boxType } })
       console.log(output)
     }
     if (type !== 'ansi') {
