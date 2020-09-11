@@ -1,0 +1,20 @@
+{
+  "name": "truesay",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "truesay": "index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^6.1.0",
+    "get-pixels": "^3.3.2",
+    "node-chat-bubble": "^1.0.3"
+  }
+}
