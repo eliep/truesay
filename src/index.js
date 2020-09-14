@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require('fs')
+const { resolve } = require("path")
 const { program } = require('commander')
 const mime = require('./mime')
 const layout = require('./layout')
@@ -9,11 +10,19 @@ const convertToAnsi = require('./ansi')
 function assertImageFile(artPath) {
   let type
   try {
+    if (!fs.existsSync(artPath) && !resolve(__dirname, '../art', artPath + '.png')) {
+      console.error(`Art path ${artPath} does not exists`)
+      process.exit(1)
+    }
+    if (!fs.existsSync(artPath)) {
+      artPath = resolve(__dirname, '../art', artPath + '.png')
+    }
     type = mime(artPath)
     if (!type) {
       console.error('Image type must be either png, gif or jpeg')
       process.exit(1)
     }
+    return artPath
   } catch (error) {
     console.error('Unable to detect file type:\n', error.message)
     process.exit(1)
@@ -37,7 +46,7 @@ program
   .option('-mb, --margin-bottom <value>', 'Bottom margin in pixel (default: 0)', parseInt)
   .option('-ml, --margin-left <value>', 'Left margin in pixel (default: 1)', parseInt)
   .action(function (artPath, cmdObj) {
-    assertImageFile(artPath);
+    artPath = assertImageFile(artPath);
 
     const text = cmdObj.text || fs.readFileSync(0).toString()
     const boxType = cmdObj.box || 'round'
