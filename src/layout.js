@@ -60,16 +60,13 @@ function buildRightLayout(options) {
   }
 
   let artIndex = 0
-  let remainingBubbleIndex = bubbleIndex
   while (artIndex < artLines.length - 1) {
-    let artLine = artLines[artIndex]
-    let bubbleLine = (bubbleLines.length > remainingBubbleIndex) ? bubbleLines[remainingBubbleIndex] : ''
-    resultLines[bubbleIndex + artIndex] = pad(artLine + ' '.repeat(paddingSize) + bubbleLine, margin.left)
+    let bubbleLine = (bubbleLines.length > bubbleIndex) ? bubbleLines[bubbleIndex] : ''
+    resultLines[bubbleIndex] = pad(artLines[artIndex] + ' '.repeat(paddingSize) + bubbleLine, margin.left)
     artIndex++
-    remainingBubbleIndex++
+    bubbleIndex++
   }
-  resultLines.push("")
-  return '\n'.repeat(margin.top) + resultLines.join('\n') + '\n'.repeat(margin.bottom)
+  return '\n'.repeat(margin.top) + resultLines.join('\n') + '\n'.repeat(margin.bottom + 1)
 }
 
 function layout(options) {
