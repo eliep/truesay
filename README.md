@@ -1,5 +1,7 @@
 # truesay
 
+![CI](https://github.com/eliep/truesay/workflows/CI/badge.svg)
+
 `truesay` is a command line utility displaying a text and an image in your terminal.
 
 ## Installation
