@@ -1,9 +1,9 @@
 const fs = require('fs')
 
-function startWith(headers, buffer) {
+function startWith (headers, buffer) {
   for (const [index, header] of headers.entries()) {
     if (header !== buffer[index]) {
-      return false;
+      return false
     }
   }
   return true
@@ -11,7 +11,7 @@ function startWith(headers, buffer) {
 
 const mime = (path) => {
   const fd = fs.openSync(path, 'r')
-  let buffer = Buffer.alloc(100);
+  const buffer = Buffer.alloc(100)
   fs.readSync(fd, buffer, 0, 8, 0)
   let mime = null
   if (startWith([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A], buffer)) {

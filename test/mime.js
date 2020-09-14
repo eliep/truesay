@@ -2,7 +2,7 @@ const mocha = require('mocha')
 const describe = mocha.describe
 const it = mocha.it
 const expect = require('chai').expect
-const { resolve } = require("path")
+const { resolve } = require('path')
 const mime = require('../src/mime')
 
 describe('test mime function', function () {

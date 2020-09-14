@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 const fs = require('fs')
-const { resolve } = require("path")
+const { resolve } = require('path')
 const { program } = require('commander')
 const mime = require('./mime')
 const layout = require('./layout')
 const convertToAnsi = require('./ansi')
 
-function assertImageFile(artPath) {
+function assertImageFile (artPath) {
   let type
   try {
     if (!fs.existsSync(artPath) && !resolve(__dirname, '../art', artPath + '.png')) {
@@ -30,9 +30,8 @@ function assertImageFile(artPath) {
 }
 
 program
-  .arguments('<art_path>', )
-  .description('Use colored ANSI text at <art_path> to say something.\n' +
-    '\'truesay say -h\' for help')
+  .arguments('<art_path>')
+  .description('Use <art_path> image to say something.\n \'truesay -h\' for help')
   .option('-t, --text <value>', 'Text to say. If omitted, stdin is used')
   .option('-b, --box <value>', 'Text box type: round (default), single, double, single-double, double-single, classic')
   .option('-bg, --background <value>', 'Background color used to simulate image transparency (#rrggbb format)')
@@ -46,7 +45,7 @@ program
   .option('-mb, --margin-bottom <value>', 'Bottom margin in pixel (default: 0)', parseInt)
   .option('-ml, --margin-left <value>', 'Left margin in pixel (default: 1)', parseInt)
   .action(function (artPath, cmdObj) {
-    artPath = assertImageFile(artPath);
+    artPath = assertImageFile(artPath)
 
     const text = cmdObj.text || fs.readFileSync(0).toString()
     const boxType = cmdObj.box || 'round'
