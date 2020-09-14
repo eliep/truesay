@@ -2,101 +2,71 @@
 
 const fs = require('fs')
 const { program } = require('commander')
-const chatBubble = require('node-chat-bubble')
 const mime = require('./mime')
-const { readAnsiFile, convertToAnsi } = require('./ansi')
+const layout = require('./layout')
+const convertToAnsi = require('./ansi')
 
-function buildTop(options) {
-  const { art, text, bubbleOptions } = options || {}
-  return (text) ? `${chatBubble.get(text, bubbleOptions)} \n ${art}` : art
-}
-
-function buildRight(options) {
-  const { art, text, margin, bubbleOptions } = options || {}
-
-  const artLines = art.split('\n')
-  let maxLength = 0
-  let maxSpace
-  for (const artLine of artLines) {
-    if (artLine.length > maxLength) {
-      maxLength = artLine.length
-      maxSpace = artLine.split(' ').length - 1
+function assertImageFile(artPath) {
+  let type
+  try {
+    type = mime(artPath)
+    if (!type) {
+      console.error('Image type must be either png, gif or jpeg')
+      process.exit(1)
     }
-  }
-
-  const boxWidth = bubbleOptions.boxWidth - maxSpace - margin
-  bubbleOptions.boxWidth = (boxWidth >= 5) ? boxWidth : 5
-  const bubble = chatBubble.get(text, bubbleOptions)
-  const bubbleLines = bubble.split('\n')
-
-  let bubbleIndex
-  let resultLines = []
-  for (bubbleIndex = 0; bubbleIndex < bubbleLines.length - artLines.length + 1; bubbleIndex++) {
-    resultLines[bubbleIndex] = ' '.repeat(maxSpace) + ' '.repeat(margin) + bubbleLines[bubbleIndex]
-  }
-
-  let artIndex = 0
-  let remainingBubbleIndex = bubbleIndex
-  while (artIndex < artLines.length - 1) {
-    let artLine = artLines[artIndex]
-    let bubbleLine = (bubbleLines.length > remainingBubbleIndex) ? bubbleLines[remainingBubbleIndex] : ''
-    resultLines[bubbleIndex + artIndex] = artLine + ' '.repeat(margin) + bubbleLine
-    artIndex++
-    remainingBubbleIndex++
-  }
-  resultLines.push("")
-  return resultLines.join('\n')
-}
-
-function build(options) {
-  switch (options.position) {
-    case 'top':
-      options.bubbleOptions.spikeDirection = "right"
-      options.bubbleOptions.spikePosition = 10
-      return buildTop(options)
-    case 'right':
-    default:
-      options.bubbleOptions.spikeDirection = "left"
-      options.bubbleOptions.spikePosition = 2
-      return buildRight(options)
+  } catch (error) {
+    console.error('Unable to detect file type:\n', error.message)
+    process.exit(1)
   }
 }
 
 program
-  .command('say <art_path>', )
+  .arguments('<art_path>', )
   .description('Use colored ANSI text at <art_path> to say something.\n' +
     '\'truesay say -h\' for help')
   .option('-t, --text <value>', 'Text to say. If omitted, stdin is used')
-  .option('-b, --box <value>', 'Box type: round (default), single, double, single-double, double-single, classic')
-  .option('-w, --width <number>', 'Width (default: 80)', parseInt)
-  .option('-p, --position <value>', 'Text box position: \'top\' (default) or \'right\'')
-  .option('-m, --margin <value>', 'Margin between art and text if position = \'right\' (default: 0)', parseInt)
+  .option('-b, --box <value>', 'Text box type: round (default), single, double, single-double, double-single, classic')
+  .option('-bg, --background <value>', 'Background color used to simulate image transparency (#rrggbb format)')
+  .option('-w, --width <number>', 'Width (default: terminal width minus margins)', parseInt)
+  .option('-pos, --position <value>', 'Text box position: \'top\' (default) or \'right\'')
+  .option('-r, --resolution <value>', 'Image resolution: \'high\' (default, 1 pixel is half a character) or ' +
+    '\'low\' (1 pixel is 2 characters wide)')
+  .option('-p, --padding <value>', 'Padding between art and text if position = \'right\' (default: 0)', parseInt)
+  .option('-mt, --margin-top <value>', 'Top margin in pixel (default: 1)', parseInt)
+  .option('-mr, --margin-right <value>', 'Right margin in pixel (default: 1)', parseInt)
+  .option('-mb, --margin-bottom <value>', 'Bottom margin in pixel (default: 0)', parseInt)
+  .option('-ml, --margin-left <value>', 'Left margin in pixel (default: 1)', parseInt)
   .action(function (artPath, cmdObj) {
+    assertImageFile(artPath);
+
     const text = cmdObj.text || fs.readFileSync(0).toString()
     const boxType = cmdObj.box || 'round'
-    const boxWidth = cmdObj.width || 80
+    const background = cmdObj.background
     const position = cmdObj.position || 'top'
-    const margin = cmdObj.margin || 0
-    const type = mime(artPath)
+    const paddingSize = cmdObj.padding || 0
+    const margin = {
+      left: cmdObj.marginLeft || 1,
+      right: cmdObj.marginRight || 1,
+      top: cmdObj.marginTop || 1,
+      bottom: cmdObj.marginBottom || 0
+    }
+    const resolution = cmdObj.resolution || 'high'
+    const maxWidth = cmdObj.width || process.stdout.columns - margin.left - margin.right
+
     const callback = (art) => {
-      const output = build({ art, text, position, margin, bubbleOptions: { boxWidth, boxType } })
+      const output = layout({
+        art,
+        text,
+        position,
+        paddingSize,
+        margin,
+        maxWidth,
+        bubbleOptions: { boxType }
+      })
       console.log(output)
     }
-    if (type !== 'ansi') {
-      convertToAnsi(artPath, callback)
-    } else {
-      readAnsiFile(artPath, callback)
-    }
-  })
 
-program
-  .command('gen <img_path>')
-  .description('Convert image (png, jpg, gif) at <img_path> into colored ANSI text using true color.\n' +
-    '\'truesay gen -h\' for help')
-  .action(function (imgPath) {
-    convertToAnsi(imgPath, (art) => {
-      console.log(art)
-    })
+    convertToAnsi(artPath, background, resolution, callback)
   })
 
 program.parse(process.argv)
