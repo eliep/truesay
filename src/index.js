@@ -31,7 +31,7 @@ program
   .option('-pos, --position <value>', 'Text box position: \'top\' (default) or \'right\'')
   .option('-r, --resolution <value>', 'Image resolution: \'high\' (default, 1 pixel is half a character) or ' +
     '\'low\' (1 pixel is 2 characters wide)')
-  .option('-p, --padding <value>', 'Padding between art and text if position = \'right\' (default: 0)', parseInt)
+  .option('-p, --padding <value>', 'Padding between art and text', parseInt)
   .option('-mt, --margin-top <value>', 'Top margin in pixel (default: 1)', parseInt)
   .option('-mr, --margin-right <value>', 'Right margin in pixel (default: 1)', parseInt)
   .option('-mb, --margin-bottom <value>', 'Bottom margin in pixel (default: 0)', parseInt)
