@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const fs = require('fs')
-const { resolve } = require('path')
 const { program } = require('commander')
 const getPixels = require('get-pixels')
 const assertImageFile = require('./utils')
@@ -12,12 +11,12 @@ program
   .arguments('<art_path>')
   .description('Use <art_path> image to say something.\n \'truesay -h\' for help')
   .option('-t, --text <value>', 'Text to say. If omitted, stdin is used')
-  .option('-b, --box <value>', 'Text box type: round (default), single, double, single-double, double-single, classic')
+  .option('-b, --box <value>', 'Text box type: round (default), single, double, single-double, double-single, classic', 'round')
   .option('-bg, --background <value>', 'Background color used to simulate image transparency (#rrggbb format)')
   .option('-w, --width <number>', 'Width (default: terminal width minus margins)', parseInt)
-  .option('-pos, --position <value>', 'Text box position: \'top\' (default) or \'right\'')
+  .option('-pos, --position <value>', 'Text box position: \'top\' (default) or \'right\'', 'top')
   .option('-r, --resolution <value>', 'Image resolution: \'high\' (default, 1 pixel is half a character) or ' +
-    '\'low\' (1 pixel is 2 characters wide)')
+    '\'low\' (1 pixel is 2 characters wide)', 'high')
   .option('-p, --padding <value>', 'Padding between art and text', parseInt)
   .option('-mt, --margin-top <value>', 'Top margin in pixel (default: 1)', parseInt)
   .option('-mr, --margin-right <value>', 'Right margin in pixel (default: 1)', parseInt)
@@ -32,28 +31,23 @@ program
     const position = cmdObj.position || 'top'
     const paddingSize = cmdObj.padding || 0
     const margin = {
-      left: cmdObj.marginLeft || 1,
-      right: cmdObj.marginRight || 1,
-      top: cmdObj.marginTop || 1,
+      left: cmdObj.marginLeft || 0,
+      right: cmdObj.marginRight || 0,
+      top: cmdObj.marginTop || 0,
       bottom: cmdObj.marginBottom || 0
     }
     const resolution = cmdObj.resolution || 'high'
     const maxWidth = cmdObj.width || process.stdout.columns - margin.left - margin.right
 
-    const callback = (art) => {
-      const output = layout({
-        art,
-        text,
-        position,
-        paddingSize,
-        margin,
-        maxWidth,
-        bubbleOptions: { boxType }
-      })
+    getPixels(artPath, function (err, pixels) {
+      if (err) {
+        console.error('Error: Bad image path')
+        process.exit(1)
+      }
+      const art = convertToAnsi(pixels, background, resolution)
+      const output = layout({ art, text, position, paddingSize, margin, maxWidth, bubbleOptions: { boxType } })
       console.log(output)
-    }
-
-    convertToAnsi(artPath, background, resolution, callback)
+    })
   })
 
 program.parse(process.argv)

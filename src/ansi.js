@@ -1,5 +1,3 @@
-const getPixels = require('get-pixels')
-
 class Pixel {
   constructor (r, g, b, a) {
     this.red = r
@@ -56,10 +54,13 @@ class Pixel {
   }
 }
 
-function convertToLowResAnsi (pixels, channels, width) {
+function convertToLowResAnsi (pixels, background) {
+  const width = pixels.shape[0]
+  const channels = pixels.shape[2]
   const art = []
+  const bgPixel = Pixel.loadFromHexadecimal(background)
   for (let x = 0; x < pixels.data.length; x += channels) {
-    const pixel = Pixel.loadFromArray(pixels.data, x, channels)
+    const pixel = Pixel.loadFromArray(pixels.data, x, channels).setBackground(bgPixel)
     art.push(Pixel.toLowResAnsi(pixel))
     if (((x + channels) / channels) % width === 0) {
       art.push('\x1b[0m\n')
@@ -68,7 +69,10 @@ function convertToLowResAnsi (pixels, channels, width) {
   return art
 }
 
-function convertToHighResAnsi (pixels, channels, width, height, background) {
+function convertToHighResAnsi (pixels, background) {
+  const width = pixels.shape[0]
+  const height = pixels.shape[1]
+  const channels = pixels.shape[2]
   const art = []
   const bgPixel = Pixel.loadFromHexadecimal(background)
   for (let y = 0; y < height; y += 2) {
@@ -85,21 +89,12 @@ function convertToHighResAnsi (pixels, channels, width, height, background) {
   return art
 }
 
-function convertToAnsi (imgPath, background, resolution, callback) {
-  getPixels(imgPath, function (err, pixels) {
-    if (err) {
-      console.error('Bad image path')
-      return
-    }
-    const width = pixels.shape[0]
-    const height = pixels.shape[1]
-    const channels = pixels.shape[2]
-    const art = (resolution === 'low')
-      ? convertToLowResAnsi(pixels, channels, width)
-      : convertToHighResAnsi(pixels, channels, width, height, background)
+function convertToAnsi (pixels, background, resolution) {
+  const art = (resolution === 'low')
+    ? convertToLowResAnsi(pixels, background)
+    : convertToHighResAnsi(pixels, background)
 
-    callback(art.join(''))
-  })
+  return art.join('')
 }
 
 module.exports = convertToAnsi
