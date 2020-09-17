@@ -1,11 +1,9 @@
-const mocha = require('mocha')
-const describe = mocha.describe
-const it = mocha.it
+const { describe, it } = require('mocha')
 const expect = require('chai').expect
 const { resolve } = require('path')
 const mime = require('../src/mime')
 
-describe('test mime function', function () {
+describe('mime function', function () {
   it('should return \'gif\' for gif file', function () {
     const type = mime(resolve('test/resources/zelda-head.gif'))
     expect(type).to.equal('gif')
