@@ -1,5 +1,5 @@
 
-const chatBubble = require('node-chat-bubble')
+const box = require('./box')
 
 function getMaxTextWidth (textLines) {
   let maxTextLength = 0
@@ -31,14 +31,11 @@ function buildTopLayout (options) {
 
   const textLines = text.split('\n')
   const maxTextLength = getMaxTextWidth(textLines)
-  const boxWidth = Math.min(maxTextLength + 4, maxWidth)
-  bubbleOptions.boxWidth = (boxWidth >= 5) ? boxWidth : 5
+  bubbleOptions.boxWidth = Math.max(Math.min(maxTextLength + 4, maxWidth - margin.left - margin.right), 5)
 
-  const bubble = chatBubble.get(text, bubbleOptions)
+  const textBox = box.get(text, bubbleOptions)
   const padding = '\n'.repeat(paddingSize + 1)
-  return (text)
-    ? '\n'.repeat(margin.top) + pad(`${bubble}${padding}${art}`, margin.left) + '\n'.repeat(margin.bottom)
-    : art
+  return '\n'.repeat(margin.top) + pad(`${textBox}${padding}${art}`, margin.left) + '\n'.repeat(margin.bottom)
 }
 
 function buildRightLayout (options) {
@@ -49,9 +46,9 @@ function buildRightLayout (options) {
   const textLines = text.split('\n')
   const maxTextWidth = getMaxTextWidth(textLines)
 
-  bubbleOptions.boxWidth = Math.max(Math.min(maxTextWidth + 4, maxWidth - maxArtWidth - paddingSize), 5)
-  const bubble = chatBubble.get(text, bubbleOptions)
-  const bubbleLines = bubble.split('\n')
+  bubbleOptions.boxWidth = Math.max(Math.min(maxTextWidth + 4, maxWidth - maxArtWidth - paddingSize - margin.left - margin.right), 5)
+  const textBox = box.get(text, bubbleOptions)
+  const bubbleLines = textBox.split('\n')
 
   let bubbleIndex
   const resultLines = []
@@ -70,6 +67,7 @@ function buildRightLayout (options) {
 }
 
 function layout (options) {
+  options.text = options.text.split('\t').join('   ')
   switch (options.position) {
     case 'top':
       options.bubbleOptions.spikeDirection = 'right'

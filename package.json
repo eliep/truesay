@@ -22,9 +22,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cli-boxes": "^2.2.1",
     "commander": "^6.1.0",
     "get-pixels": "^3.3.2",
-    "node-chat-bubble": "^1.0.3"
+    "sinon": "^9.0.3",
+    "string-length": "^4.0.1",
+    "wrap-ansi": "^7.0.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
