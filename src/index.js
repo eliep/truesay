@@ -45,7 +45,7 @@ program
         process.exit(1)
       }
       const art = convertToAnsi(pixels, background, resolution)
-      const output = layout({ art, text, position, paddingSize, margin, maxWidth, bubbleOptions: { boxType } })
+      const output = layout({ art, text, position, paddingSize, margin, maxWidth, boxOptions: { boxType } })
       console.log(output)
     })
   })

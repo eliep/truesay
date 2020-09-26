@@ -1,82 +1,82 @@
 
 const box = require('./box')
 
-function getMaxTextWidth (textLines) {
-  let maxTextLength = 0
+const getMaxTextWidth = (textLines) => {
+  let maxTextWidth = 0
   for (const textLine of textLines) {
-    if (textLine.length > maxTextLength) {
-      maxTextLength = textLine.length
+    if (textLine.length > maxTextWidth) {
+      maxTextWidth = textLine.length
     }
   }
-  return maxTextLength
+  return maxTextWidth
 }
 
-function getMaxArtWidth (artLines) {
-  let maxArtLength = 0
+const getMaxArtWidth = (artLines) => {
+  let maxArtWidth = 0
   for (const artLine of artLines) {
-    const length = (artLine.match(/[ \u2584\u2580]/g) || []).length
-    if (length > maxArtLength) {
-      maxArtLength = length
+    const width = (artLine.match(/[ \u2584\u2580]/g) || []).length
+    if (width > maxArtWidth) {
+      maxArtWidth = width
     }
   }
-  return maxArtLength
+  return maxArtWidth
 }
 
-function pad (text, size) {
+const pad = (text, size) => {
   return text.split('\n').map(line => ' '.repeat(size) + line).join('\n')
 }
 
-function buildTopLayout (options) {
-  const { art, text, paddingSize, margin, maxWidth, bubbleOptions } = options || {}
+const buildTopLayout = (options) => {
+  const { art, text, paddingSize, margin, maxWidth, boxOptions } = options || {}
 
   const textLines = text.split('\n')
-  const maxTextLength = getMaxTextWidth(textLines)
-  bubbleOptions.boxWidth = Math.max(Math.min(maxTextLength + 4, maxWidth - margin.left - margin.right), 5)
+  const maxTextWidth = getMaxTextWidth(textLines)
+  boxOptions.boxWidth = Math.max(Math.min(maxTextWidth + 4, maxWidth - margin.left - margin.right), 5)
 
-  const textBox = box.get(text, bubbleOptions)
+  const textBox = box.get(text, boxOptions)
   const padding = '\n'.repeat(paddingSize + 1)
   return '\n'.repeat(margin.top) + pad(`${textBox}${padding}${art}`, margin.left) + '\n'.repeat(margin.bottom)
 }
 
-function buildRightLayout (options) {
-  const { art, text, paddingSize, margin, maxWidth, bubbleOptions } = options || {}
+const buildRightLayout = (options) => {
+  const { art, text, paddingSize, margin, maxWidth, boxOptions } = options || {}
 
   const artLines = art.split('\n')
   const maxArtWidth = getMaxArtWidth(artLines)
   const textLines = text.split('\n')
   const maxTextWidth = getMaxTextWidth(textLines)
 
-  bubbleOptions.boxWidth = Math.max(Math.min(maxTextWidth + 4, maxWidth - maxArtWidth - paddingSize - margin.left - margin.right), 5)
-  const textBox = box.get(text, bubbleOptions)
-  const bubbleLines = textBox.split('\n')
+  boxOptions.boxWidth = Math.max(Math.min(maxTextWidth + 4, maxWidth - maxArtWidth - paddingSize - margin.left - margin.right), 5)
+  const textBox = box.get(text, boxOptions)
+  const boxedLines = textBox.split('\n')
 
-  let bubbleIndex
+  let index
   const resultLines = []
-  for (bubbleIndex = 0; bubbleIndex < bubbleLines.length - artLines.length + 1; bubbleIndex++) {
-    resultLines[bubbleIndex] = pad(' '.repeat(maxArtWidth) + ' '.repeat(paddingSize) + bubbleLines[bubbleIndex], margin.left)
+  for (index = 0; index < boxedLines.length - artLines.length + 1; index++) {
+    resultLines[index] = pad(' '.repeat(maxArtWidth) + ' '.repeat(paddingSize) + boxedLines[index], margin.left)
   }
 
   let artIndex = 0
   while (artIndex < artLines.length - 1) {
-    const bubbleLine = (bubbleLines.length > bubbleIndex) ? bubbleLines[bubbleIndex] : ''
-    resultLines[bubbleIndex] = pad(artLines[artIndex] + ' '.repeat(paddingSize) + bubbleLine, margin.left)
+    const boxedLine = (index < boxedLines.length) ? boxedLines[index] : ''
+    resultLines[index] = pad(artLines[artIndex] + ' '.repeat(paddingSize) + boxedLine, margin.left)
     artIndex++
-    bubbleIndex++
+    index++
   }
   return '\n'.repeat(margin.top) + resultLines.join('\n') + '\n'.repeat(margin.bottom + 1)
 }
 
-function layout (options) {
+const layout = (options) => {
   options.text = options.text.split('\t').join('   ')
   switch (options.position) {
     case 'top':
-      options.bubbleOptions.spikeDirection = 'right'
-      options.bubbleOptions.spikePosition = 10
+      options.boxOptions.spikeDirection = 'right'
+      options.boxOptions.spikePosition = 10
       return buildTopLayout(options)
     case 'right':
     default:
-      options.bubbleOptions.spikeDirection = 'left'
-      options.bubbleOptions.spikePosition = 2
+      options.boxOptions.spikeDirection = 'left'
+      options.boxOptions.spikePosition = 2
       return buildRightLayout(options)
   }
 }

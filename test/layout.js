@@ -39,13 +39,13 @@ describe('layout function', function () {
       const text = genText(textLength, 'T')
       const position = 'top'
       const defaultSpikePosition = 10
-      const bubbleOptions = { boxType: 'round' }
+      const boxOptions = { boxType: 'round' }
       const textLineLength = margin.left + toBoxWidth(textLength) + margin.right
       const fittedTextLineLength = Math.min(textLineLength, maxWidth) - margin.right
       const textHeight = toBoxHeight(Math.ceil(textLineLength / maxWidth))
       const boxWith = fittedTextLineLength - margin.left
       const spikePosition = Math.min(defaultSpikePosition, Math.floor(boxWith / 2))
-      const output = layout({ art, text, position, paddingSize, margin, maxWidth, bubbleOptions })
+      const output = layout({ art, text, position, paddingSize, margin, maxWidth, boxOptions })
 
       const lines = output.split('\n')
       expect(lines.length).to.equal(margin.top + textHeight + paddingSize + artLength + margin.bottom + 1)
@@ -69,11 +69,11 @@ describe('layout function', function () {
       const art = genArt(artLength, artLength, '\u2580')
       const text = genText(textLength, 'T')
       const position = 'right'
-      const bubbleOptions = { boxType: 'round' }
+      const boxOptions = { boxType: 'round' }
       const maxBoxWidth = maxWidth - artLength - paddingSize - margin.right - margin.left
       const boxWidth = Math.max(Math.min(toBoxWidth(textLength), maxBoxWidth), 5)
       const boxHeight = Math.ceil(textLength / (toTextWidth(boxWidth))) + 3
-      const output = layout({ art, text, position, paddingSize, margin, maxWidth, bubbleOptions })
+      const output = layout({ art, text, position, paddingSize, margin, maxWidth, boxOptions })
       const lines = output.split('\n')
 
       expect(lines.length).to.equal(margin.top + Math.max(boxHeight, artLength) + margin.bottom + 1)
