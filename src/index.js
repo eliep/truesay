@@ -3,7 +3,7 @@
 const fs = require('fs')
 const { program } = require('commander')
 const getPixels = require('get-pixels')
-const assertImageFile = require('./utils')
+const { assertPath } = require('./utils')
 const convertToAnsi = require('./ansi')
 const layout = require('./layout')
 
@@ -22,8 +22,8 @@ program
   .option('-mr, --margin-right <value>', 'Right margin in pixel (default: 1)', parseInt)
   .option('-mb, --margin-bottom <value>', 'Bottom margin in pixel (default: 0)', parseInt)
   .option('-ml, --margin-left <value>', 'Left margin in pixel (default: 1)', parseInt)
-  .action(function (artPath, cmdObj) {
-    artPath = assertImageFile(artPath)
+  .action((artPath, cmdObj) => {
+    artPath = assertPath(artPath)
 
     const text = cmdObj.text || fs.readFileSync(0).toString()
     const boxType = cmdObj.box || 'round'
@@ -39,7 +39,7 @@ program
     const resolution = cmdObj.resolution || 'high'
     const maxWidth = cmdObj.width || process.stdout.columns - margin.left - margin.right
 
-    getPixels(artPath, function (err, pixels) {
+    getPixels(artPath, (err, pixels) => {
       if (err) {
         console.error('Error: Bad image path')
         process.exit(1)
