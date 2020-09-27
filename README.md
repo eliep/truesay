@@ -1,6 +1,7 @@
 # truesay
 
-![CI](https://github.com/eliep/truesay/workflows/CI/badge.svg)
+![CI](https://github.com/eliep/truesay/workflows/CI/badge.svg) 
+![npm](https://github.com/eliep/truesay/workflows/publish/badge.svg)
 
 `truesay` is a command line utility displaying a text, and an image 
 in a true color enabled terminal.
