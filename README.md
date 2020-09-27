@@ -36,7 +36,7 @@ Option | Description
 `-ml, --margin-left` | Left margin in pixel (default: `1`)
 
 ### Image format and resolution
-`truesay` has one mandatory parameter which is the path to an image. 
+`truesay` has one mandatory parameter which is an image path. 
 This path can be absolute or relative and must point to either an image file 
 (*gif*, *jpg* or *png*) or a directory containing at least one image file.
 
@@ -45,7 +45,7 @@ There's only three formats accepted for the image: *gif*, *jpg* and *png*.
 
 #### Random pick in directory
 If the image path is a directory, `truesay` will recursively list all files in
-this directory, keep only the image files and choose among these one to display at random.  
+this directory, keep only the image and choose among these one to display at random.  
 
 #### Image resolution
 There are two resolutions for the image rendering, available via the `-r` option:
@@ -61,8 +61,8 @@ Some image formats like `png` allow pixel to be transparent.
 
 By default: 
 
-- if a pixel is fully transparent, `truesay` will ignore the corresponding rgb value.
-- if a pixel is semi transparent, `truesay` will ignore the transparency value.
+- if a pixel is fully transparent, `truesay` will ignore its rgb value,
+- if a pixel is semi transparent, `truesay` will ignore its transparency value.
 
 However, to better handle semi transparent pixel, 
 it's possible to use the `-bg` option to pass the terminal background color 
