@@ -11,7 +11,7 @@ program
   .arguments('<art_path>')
   .description('Use <art_path> image to say something.\n \'truesay -h\' for help')
   .option('-t, --text <value>', 'Text to say. If omitted, stdin is used')
-  .option('-b, --box <value>', 'Text box type: round (default), single, double, single-double, double-single, classic', 'round')
+  .option('-b, --box <value>', 'Text box style: round (default), single, double, single-double, double-single, classic', 'round')
   .option('-bg, --background <value>', 'Background color used to simulate image transparency (#rrggbb format)')
   .option('-w, --width <number>', 'Width (default: terminal width minus margins)', parseInt)
   .option('-pos, --position <value>', 'Text box position: \'top\' (default) or \'right\'', 'top')
@@ -24,8 +24,8 @@ program
   .option('-ml, --margin-left <value>', 'Left margin in pixel (default: 1)', parseInt)
   .action((artPath, cmdObj) => {
     artPath = assertPath(artPath)
-
-    const text = cmdObj.text || fs.readFileSync(0).toString()
+    // console.log(cmdObj)
+    const text = cmdObj.text || fs.readFileSync(0).toString().slice(0, -1)
     const boxType = cmdObj.box || 'round'
     const background = cmdObj.background
     const position = cmdObj.position || 'top'
