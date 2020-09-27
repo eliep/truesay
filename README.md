@@ -5,6 +5,8 @@
 `truesay` is a command line utility displaying a text, and an image 
 in a true color enabled terminal.
 
+![truesay screenshot](./screenshot-lucca.png?raw=true)
+
 ## Installation
 
 ```bash
@@ -16,6 +18,22 @@ in a true color enabled terminal.
 ```bash
 > truesay <path-to-image-or-directory> [options]
 ```
+
+### Options
+
+Option | Description
+-------| -------------
+`-t, --text` | Text to say. If omitted, stdin is used
+`-b, --box` | Text box style: `round` (default), `single`, `double`, `single-double`, `double-single`, `classic`
+`-bg, --background` | Background color used to simulate image transparency (`#rrggbb` format)
+`-w, --width` | Width (default: terminal width minus margin left and right)
+`-pos, --position` | Text box position: `top` (default) or `right`
+`-r, --resolution` | Image resolution: `high` (default, 1 pixel is half a character) or `low` (1 pixel is 2 characters wide)'
+`-p, --padding` | Padding between art and text (default: `0`)
+`-mt, --margin-top` | Top margin in pixel (default: `1`)
+`-mr, --margin-right` | Right margin in pixel (default: `1`)
+`-mb, --margin-bottom` | Bottom margin in pixel (default: `0`)
+`-ml, --margin-left` | Left margin in pixel (default: `1`)
 
 ### Image format and resolution
 `truesay` has one mandatory parameter which is the path to an image. 
@@ -58,11 +76,11 @@ by computing the real color of semi transparent color.
 
 ### Text input
 By default, `truesay` reads its text input from `stdin` but 
-this can be override by setting the `-t` option to display a given text:
+this can be overridden by setting the `-t` option to display a given text:
 
  ```bash
  > echo 'Hello world!' | truesay games/link # diplay 'Hello world!' from stdin
- > truesay games/link -t 'Hello world!'size     # diplay 'Hello world!' from -t option
+ > truesay games/link -t 'Hello world!'     # diplay 'Hello world!' from -t option
  > fortune | truesay games/link             # diplay a random fortune
  ```
 
@@ -130,22 +148,6 @@ The box style can be set with the `-b` option, 6 values are available:
 | classic |
 +---------+
 ```
-
-### Options
-
-Option | Description
--------| -------------
-`-t, --text` | Text to say. If omitted, stdin is used
-`-b, --box` | Text box style: `round` (default), `single`, `double`, `single-double`, `double-single`, `classic`
-`-bg, --background` | Background color used to simulate image transparency (`#rrggbb` format)
-`-w, --width` | Width (default: terminal width minus margin left and right)
-`-pos, --position` | Text box position: `top` (default) or `right`
-`-r, --resolution` | Image resolution: `high` (default, 1 pixel is half a character) or `low` (1 pixel is 2 characters wide)'
-`-p, --padding` | Padding between art and text (default: `0`)
-`-mt, --margin-top` | Top margin in pixel (default: `1`)
-`-mr, --margin-right` | Right margin in pixel (default: `1`)
-`-mb, --margin-bottom` | Bottom margin in pixel (default: `0`)
-`-ml, --margin-left` | Left margin in pixel (default: `1`)
 
 
 
