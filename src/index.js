@@ -24,16 +24,15 @@ program
   .option('-ml, --margin-left <value>', 'Left margin in pixel (default: 1)', parseInt)
   .action((artPath, cmdObj) => {
     artPath = assertPath(artPath)
-    // console.log(cmdObj)
     const text = cmdObj.text || fs.readFileSync(0).toString().slice(0, -1)
     const boxType = cmdObj.box || 'round'
     const background = cmdObj.background
     const position = cmdObj.position || 'top'
     const paddingSize = cmdObj.padding || 0
     const margin = {
-      left: cmdObj.marginLeft || 0,
-      right: cmdObj.marginRight || 0,
-      top: cmdObj.marginTop || 0,
+      left: cmdObj.marginLeft === undefined ? 1 : cmdObj.marginLeft,
+      right: cmdObj.marginRight === undefined ? 1 : cmdObj.marginRight,
+      top: cmdObj.marginTop === undefined ? 1 : cmdObj.marginTop,
       bottom: cmdObj.marginBottom || 0
     }
     const resolution = cmdObj.resolution || 'high'
