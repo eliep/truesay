@@ -11,7 +11,7 @@ program
   .arguments('<art_path>')
   .description('Use <art_path> image to say something.\n \'truesay -h\' for help')
   .option('-t, --text <value>', 'Text to say. If omitted, stdin is used')
-  .option('-b, --box <value>', 'Text box style: round (default), single, double, single-double, double-single, classic', 'round')
+  .option('-b, --box <value>', 'Text box style: round (default), single, double, singleDouble, doubleSingle, classic', 'round')
   .option('-bg, --background <value>', 'Background color used to simulate image transparency (#rrggbb format)')
   .option('-w, --width <number>', 'Width (default: terminal width minus margins)', parseInt)
   .option('-pos, --position <value>', 'Text box position: \'top\' (default) or \'right\'', 'top')

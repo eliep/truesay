@@ -18,6 +18,7 @@ in a true color enabled terminal.
 
 ```bash
 > truesay <path-to-image-or-directory> [options]
+> fortune | truesay <path-to-image-or-directory> [options]
 ```
 
 ### Options
@@ -25,7 +26,7 @@ in a true color enabled terminal.
 Option | Description
 -------| -------------
 `-t, --text` | Text to say. If omitted, stdin is used
-`-b, --box` | Text box style: `round` (default), `single`, `double`, `single-double`, `double-single`, `classic`
+`-b, --box` | Text box style: `round` (default), `single`, `double`, `singleDouble`, `doubleSingle`, `classic`
 `-bg, --background` | Background color used to simulate image transparency (`#rrggbb` format)
 `-w, --width` | Width (default: terminal width minus margin left and right)
 `-pos, --position` | Text box position: `top` (default) or `right`
@@ -46,7 +47,7 @@ There's only three formats accepted for the image: *gif*, *jpg* and *png*.
 
 #### Random pick in directory
 If the image path is a directory, `truesay` will recursively list all files in
-this directory, keep only the image and choose among these one to display at random.  
+that directory, keep only the image files and choose among these one to display at random.  
 
 #### Image resolution
 There are two resolutions for the image rendering, available via the `-r` option:
@@ -74,6 +75,10 @@ by computing the real color of semi transparent color.
 ```bash
 > fortune | truesay distro/32/tux -bg '#2c3440'
 ```
+
+Below a comparison with and without the `-bg` option:
+
+![truesay screenshot](./screenshot-bg.png?raw=true)
 
 ### Text input
 By default, `truesay` reads its text input from `stdin` but 
