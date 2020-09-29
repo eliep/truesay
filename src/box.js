@@ -2,6 +2,7 @@
 // copied from https://github.com/gauravchl/node-chat-bubble to fix boxWidth computation
 
 const wrapAnsi = require('wrap-ansi')
+const { Text } = require('./ansi')
 const cliBoxes = require('cli-boxes')
 const stringLength = require('string-length')
 
@@ -10,6 +11,17 @@ const defaultOptions = {
   spikeDirection: 'right',
   spikePosition: 10,
   boxType: 'round'
+}
+
+const colorLine = (lines) => {
+  const maxLineWidth = Math.max(...lines.map(line => stringLength(line)), 8)
+  const colorWidth = Math.floor(maxLineWidth / 8)
+  const colorMargin = Math.floor((maxLineWidth % 8) / 2)
+  let colorLine = ' '.repeat(colorMargin)
+  for (let i = 0; i < 8; i++) {
+    colorLine += Text.space(colorWidth).withBackgroundColor(i).ansi()
+  }
+  return colorLine + Text.reset()
 }
 
 const wrap = (message, options) => {
@@ -22,8 +34,11 @@ const wrap = (message, options) => {
 const get = (message, options) => {
   options = Object.assign(defaultOptions, options)
   const { width, lines } = wrap(message, options)
+
   if (options.boxType === 'none') {
     return lines.join('\n')
+  } else if (options.boxType === 'colors') {
+    return lines.join('\n') + '\n\n' + colorLine(lines)
   }
 
   const spikePosition = Math.min(options.spikePosition, width / 2)

@@ -2,7 +2,7 @@ const { describe, it } = require('mocha')
 const expect = require('chai').expect
 const fs = require('fs')
 const getPixels = require('get-pixels')
-const convertToAnsi = require('../src/ansi')
+const { convertToAnsi } = require('../src/ansi')
 
 describe('convertToAnsi function', function () {
   it('should match low resolution, no background ainsi file', function (done) {

@@ -3,8 +3,9 @@
 ![CI](https://github.com/eliep/truesay/workflows/CI/badge.svg) 
 ![npm](https://github.com/eliep/truesay/workflows/publish/badge.svg)
 
-`truesay` is a command line utility displaying a text, and an image 
-in a true color enabled terminal.
+`truesay` is a command line utility displaying a text alongside an image 
+in your terminal. `truesay` render the image with UTF-8 character and ANSI
+escape code.
 
 ![truesay screenshot](./screenshot-lucca.png?raw=true)
 
@@ -155,7 +156,10 @@ The box style can be set with the `-b` option, 6 styles are available to choose 
 +---------+
 ```
 
-`-b` option also accepts the `none` value to disable text boxing.
+`-b` option also accepts two special values:
+
+- `none`: disable text boxing,
+- `colors`: the first 8 terminal colors are printed under the text
 
 
 

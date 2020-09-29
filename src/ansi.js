@@ -3,8 +3,10 @@ const { chunk } = require('./utils')
 class Text {
   constructor (str) {
     this.str = str
-    this.bg = null
-    this.fg = null
+    this.bgPixel = null
+    this.bgColor = null
+    this.fgPixel = null
+    this.fgColor = null
   }
 
   static space (count) {
@@ -23,27 +25,53 @@ class Text {
     return new Text('\n'.repeat(count || 1))
   }
 
-  withForeground (pixel) {
-    this.fg = pixel
+  static reset () {
+    return '\x1b[0m'
+  }
+
+  withForegroundPixel (pixel) {
+    this.fgPixel = pixel
     return this
   }
 
-  withBackground (pixel) {
-    this.bg = pixel
+  withBackgroundPixel (pixel) {
+    this.bgPixel = pixel
     return this
+  }
+
+  withForegroundColor (color) {
+    this.fgColor = color
+    return this
+  }
+
+  withBackgroundColor (color) {
+    this.bgColor = color
+    return this
+  }
+
+  hasBackground () {
+    return (this.bgPixel && this.bgPixel.alpha !== 0) || this.bgColor !== null
+  }
+
+  hasForeground () {
+    return (this.fgPixel && this.fgPixel.alpha !== 0) || this.fgColor !== null
   }
 
   ansi () {
-    if ((!this.bg || this.bg.alpha === 0) && (!this.fg || this.fg.alpha === 0)) {
-      return '\x1b[0m' + this.str
+    if (!this.hasBackground() && !this.hasForeground()) {
+      return Text.reset() + this.str
     }
 
     let text = ''
-    if (this.bg && this.bg.alpha !== 0) {
-      text += '\x1b[48;2;' + this.bg.red + ';' + this.bg.green + ';' + this.bg.blue + 'm'
+    if (this.bgPixel && this.bgPixel.alpha !== 0) {
+      text += '\x1b[48;2;' + this.bgPixel.red + ';' + this.bgPixel.green + ';' + this.bgPixel.blue + 'm'
+    } else if (this.bgColor !== null) {
+      text += '\x1b[48;5;' + this.bgColor + 'm'
     }
-    if (this.fg) {
-      text += '\x1b[38;2;' + this.fg.red + ';' + this.fg.green + ';' + this.fg.blue + 'm'
+    if (this.fgPixel) {
+      text += '\x1b[38;2;' + this.fgPixel.red + ';' + this.fgPixel.green + ';' + this.fgPixel.blue + 'm'
+    } else if (this.fgColor) {
+      text += '\x1b[38;5;' + this.fgColor + 'm'
     }
     return text + this.str
   }
@@ -51,16 +79,16 @@ class Text {
 
 class Render {
   static atLowRes (pixel) {
-    return Text.space(2).withBackground(pixel).ansi()
+    return Text.space(2).withBackgroundPixel(pixel).ansi()
   }
 
   static atHighRes (pixelTop, pixelBottom) {
     if (pixelTop.alpha === 0 && pixelBottom.alpha === 0) {
       return Text.space().ansi()
     } else if (pixelBottom.alpha === 0) {
-      return Text.topHalf().withForeground(pixelTop).ansi()
+      return Text.topHalf().withForegroundPixel(pixelTop).ansi()
     } else {
-      return Text.bottomHalf().withBackground(pixelTop).withForeground(pixelBottom).ansi()
+      return Text.bottomHalf().withBackgroundPixel(pixelTop).withForegroundPixel(pixelBottom).ansi()
     }
   }
 }
@@ -149,4 +177,4 @@ const convertToAnsi = (pixels, background, resolution) => {
   return new Image(pixels, background).render(resolution)
 }
 
-module.exports = convertToAnsi
+module.exports = { Text, convertToAnsi }

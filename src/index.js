@@ -4,7 +4,7 @@ const fs = require('fs')
 const { program } = require('commander')
 const getPixels = require('get-pixels')
 const { assertPath } = require('./utils')
-const convertToAnsi = require('./ansi')
+const { convertToAnsi } = require('./ansi')
 const layout = require('./layout')
 
 program
@@ -12,7 +12,8 @@ program
   .description('Use <art_path> image to say something.\n \'truesay -h\' for help')
   .option('-t, --text <value>', 'Text to say. If omitted, stdin is used')
   .option('-b, --box <value>',
-    'Text box style: round (default), single, double, singleDouble, doubleSingle, classic, none', 'round')
+    'Text box style: round (default), single, double, singleDouble, doubleSingle, classic, none, colors',
+    'round')
   .option('-bg, --background <value>', 'Background color used to simulate image transparency (#rrggbb format)')
   .option('-w, --width <number>', 'Width (default: terminal width minus margins)', parseInt)
   .option('-pos, --position <value>', 'Text box position: \'top\' (default) or \'right\'', 'top')
@@ -25,6 +26,7 @@ program
   .option('-ml, --margin-left <value>', 'Left margin in pixel (default: 1)', parseInt)
   .action((artPath, cmdObj) => {
     artPath = assertPath(artPath)
+
     const text = cmdObj.text || fs.readFileSync(0).toString().slice(0, -1)
     const boxType = cmdObj.box || 'round'
     const background = cmdObj.background
