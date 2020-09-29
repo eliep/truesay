@@ -26,7 +26,7 @@ in a true color enabled terminal.
 Option | Description
 -------| -------------
 `-t, --text` | Text to say. If omitted, stdin is used
-`-b, --box` | Text box style: `round` (default), `single`, `double`, `singleDouble`, `doubleSingle`, `classic`
+`-b, --box` | Text box style: `round` (default), `single`, `double`, `singleDouble`, `doubleSingle`, `classic`, `none`
 `-bg, --background` | Background color used to simulate image transparency (`#rrggbb` format)
 `-w, --width` | Width (default: terminal width minus margin left and right)
 `-pos, --position` | Text box position: `top` (default) or `right`
@@ -132,7 +132,7 @@ between the text box and the image:
 ```
  
 ### Box style
-The box style can be set with the `-b` option, 6 values are available: 
+The box style can be set with the `-b` option, 6 styles are available to choose from: 
 
 ``` 
 ╭───────╮
@@ -154,6 +154,8 @@ The box style can be set with the `-b` option, 6 values are available:
 | classic |
 +---------+
 ```
+
+`-b` option also accepts the `none` value to disable text boxing.
 
 
 

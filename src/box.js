@@ -12,28 +12,37 @@ const defaultOptions = {
   boxType: 'round'
 }
 
-const getBox = (message, options) => {
+const wrap = (message, options) => {
+  const boxSpace = (options.boxType === 'none') ? 0 : 4
+  const width = Math.min(options.boxWidth, stringLength(message) + boxSpace)
+  const lines = wrapAnsi(message, width - boxSpace, { hard: true }).split(/\n/)
+  return { width, lines }
+}
+
+const get = (message, options) => {
   options = Object.assign(defaultOptions, options)
-  const boxWidth = Math.min(options.boxWidth, stringLength(message) + 4)
-  const spikePosition = Math.min(options.spikePosition, boxWidth / 2)
+  const { width, lines } = wrap(message, options)
+  if (options.boxType === 'none') {
+    return lines.join('\n')
+  }
+
+  const spikePosition = Math.min(options.spikePosition, width / 2)
   const boxType = options.boxType
   const spikeDirection = options.spikeDirection
 
   const boxChars = cliBoxes[boxType]
-  const topBorder = boxChars.topLeft + boxChars.horizontal.repeat(boxWidth - 2) + boxChars.topRight
-  const bottomBorder = boxChars.bottomLeft + boxChars.horizontal.repeat(boxWidth - 2) + boxChars.bottomRight
+  const topBorder = boxChars.topLeft + boxChars.horizontal.repeat(width - 2) + boxChars.topRight
+  const bottomBorder = boxChars.bottomLeft + boxChars.horizontal.repeat(width - 2) + boxChars.bottomRight
 
-  let lines = wrapAnsi(message, boxWidth - 4, { hard: true }).split(/\n/)
-
-  lines = lines.map(line => {
-    const rightPaddingCount = boxWidth - 4 - stringLength(line)
+  const paddedLines = lines.map(line => {
+    const rightPaddingCount = width - 4 - stringLength(line)
     const rightPadding = ' '.repeat(Math.max(rightPaddingCount, 0))
     return boxChars.vertical + ' ' + line + ' ' + rightPadding + boxChars.vertical
   })
 
-  const result = topBorder + '\n' + lines.join('\n') + '\n' + bottomBorder
+  const result = topBorder + '\n' + paddedLines.join('\n') + '\n' + bottomBorder
   const spike = spikeDirection === 'right' ? '\\' : '/'
   return result + '\n' + ' '.repeat(spikePosition) + spike
 }
 
-module.exports = { get: getBox }
+module.exports = { get }
