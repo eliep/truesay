@@ -59,7 +59,7 @@ class Text {
 
   ansi () {
     if (!this.hasBackground() && !this.hasForeground()) {
-      return Text.reset() + this.str
+      return this.str
     }
 
     let text = ''
@@ -73,7 +73,7 @@ class Text {
     } else if (this.fgColor) {
       text += '\x1b[38;5;' + this.fgColor + 'm'
     }
-    return text + this.str
+    return text + this.str + Text.reset()
   }
 }
 
