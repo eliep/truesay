@@ -71,7 +71,7 @@ However, to better handle semi transparent pixel,
 it's possible to use the `-bg` option to pass the terminal background color 
 (in `#rrggbb` format). 
 `truesay` will then use this color to emulate transparency 
-by computing the real color of semi transparent color.
+by computing the rendering color of semi transparent pixel.
 
 ```bash
 > fortune | truesay distro/32/tux -bg '#2c3440'
@@ -162,6 +162,6 @@ The box style can be set with the `-b` option, 6 styles are available to choose 
 - `colors`: the first 8 terminal colors are printed under the text
 
 
-
+![truesay screenshot](./screenshot-cobra.png?raw=true)
 
  
