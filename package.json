@@ -4,7 +4,6 @@
   "description": "A cowsay alternative for terminal with true color.",
   "main": "src/index.js",
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
     "lint": "eslint src",
     "test": "npm run lint && mocha"
   },
