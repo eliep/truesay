@@ -14,7 +14,7 @@ program
   .option('-b, --box <value>',
     'Text box style: round (default), single, double, singleDouble, doubleSingle, classic, none, colors',
     'round')
-  .option('-c, --background <value>', 'Background color used to simulate image transparency (#rrggbb format)')
+  .option('-c, --background-color <value>', 'Background color used to simulate image transparency (#rrggbb format)')
   .option('-w, --width <number>', 'Width (default: terminal width minus margins)', parseInt)
   .option('-p, --position <value>', 'Text box position: \'top\' (default) or \'right\'', 'top')
   .option('-r, --resolution <value>', 'Image resolution: \'high\' (default, 1 pixel is half a character) or ' +
@@ -45,7 +45,6 @@ program
         console.error('Error: Bad image path')
         process.exit(1)
       }
-      
       const art = convertToAnsi(pixels, background, resolution)
       const output = layout({ art, text, position, paddingSize, margin, maxWidth, boxOptions: { boxType } })
       console.log(output)
