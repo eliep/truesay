@@ -14,16 +14,16 @@ program
   .option('-b, --box <value>',
     'Text box style: round (default), single, double, singleDouble, doubleSingle, classic, none, colors',
     'round')
-  .option('-bg, --background <value>', 'Background color used to simulate image transparency (#rrggbb format)')
+  .option('-c, --background <value>', 'Background color used to simulate image transparency (#rrggbb format)')
   .option('-w, --width <number>', 'Width (default: terminal width minus margins)', parseInt)
-  .option('-pos, --position <value>', 'Text box position: \'top\' (default) or \'right\'', 'top')
+  .option('-p, --position <value>', 'Text box position: \'top\' (default) or \'right\'', 'top')
   .option('-r, --resolution <value>', 'Image resolution: \'high\' (default, 1 pixel is half a character) or ' +
     '\'low\' (1 pixel is 2 characters wide)', 'high')
-  .option('-p, --padding <value>', 'Padding between art and text', parseInt)
-  .option('-mt, --margin-top <value>', 'Top margin in pixel (default: 1)', parseInt)
-  .option('-mr, --margin-right <value>', 'Right margin in pixel (default: 1)', parseInt)
-  .option('-mb, --margin-bottom <value>', 'Bottom margin in pixel (default: 0)', parseInt)
-  .option('-ml, --margin-left <value>', 'Left margin in pixel (default: 1)', parseInt)
+  .option('-P, --padding <value>', 'Padding between art and text', parseInt)
+  .option('-T, --margin-top <value>', 'Top margin in pixel (default: 1)', parseInt)
+  .option('-R, --margin-right <value>', 'Right margin in pixel (default: 1)', parseInt)
+  .option('-B, --margin-bottom <value>', 'Bottom margin in pixel (default: 0)', parseInt)
+  .option('-L, --margin-left <value>', 'Left margin in pixel (default: 1)', parseInt)
   .action((artPath, cmdObj) => {
     artPath = assertPath(artPath)
 
@@ -40,12 +40,12 @@ program
     }
     const resolution = cmdObj.resolution || 'high'
     const maxWidth = cmdObj.width || process.stdout.columns - margin.left - margin.right
-
     getPixels(artPath, (err, pixels) => {
       if (err) {
         console.error('Error: Bad image path')
         process.exit(1)
       }
+      
       const art = convertToAnsi(pixels, background, resolution)
       const output = layout({ art, text, position, paddingSize, margin, maxWidth, boxOptions: { boxType } })
       console.log(output)

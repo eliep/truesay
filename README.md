@@ -28,15 +28,15 @@ Option | Description
 -------| -------------
 `-t, --text` | Text to say. If omitted, stdin is used
 `-b, --box` | Text box style: `round` (default), `single`, `double`, `singleDouble`, `doubleSingle`, `classic`, `none`
-`-bg, --background` | Background color used to simulate image transparency (`#rrggbb` format)
+`-c, --background-color` | Background color used to simulate image transparency (`#rrggbb` format)
 `-w, --width` | Width (default: terminal width minus margin left and right)
-`-pos, --position` | Text box position: `top` (default) or `right`
+`-p, --position` | Text box position: `top` (default) or `right`
 `-r, --resolution` | Image resolution: `high` (default, 1 pixel is half a character) or `low` (1 pixel is 2 characters wide)'
-`-p, --padding` | Padding between art and text (default: `0`)
-`-mt, --margin-top` | Top margin in pixel (default: `1`)
-`-mr, --margin-right` | Right margin in pixel (default: `1`)
-`-mb, --margin-bottom` | Bottom margin in pixel (default: `0`)
-`-ml, --margin-left` | Left margin in pixel (default: `1`)
+`-P, --padding` | Padding between art and text (default: `0`)
+`-T, --margin-top` | Top margin in pixel (default: `1`)
+`-R, --margin-right` | Right margin in pixel (default: `1`)
+`-B, --margin-bottom` | Bottom margin in pixel (default: `0`)
+`-L, --margin-left` | Left margin in pixel (default: `1`)
 
 ### Image format and resolution
 `truesay` has one mandatory parameter which is an image path. 
@@ -68,16 +68,16 @@ By default:
 - if a pixel is semi transparent, `truesay` will ignore its transparency value.
 
 However, to better handle semi transparent pixel, 
-it's possible to use the `-bg` option to pass the terminal background color 
+it's possible to use the `-c` option to pass the terminal background color 
 (in `#rrggbb` format). 
 `truesay` will then use this color to emulate transparency 
 by computing the rendering color of semi transparent pixel.
 
 ```bash
-> fortune | truesay distro/32/tux -bg '#2c3440'
+> fortune | truesay distro/32/tux -c '#2c3440'
 ```
 
-Below a comparison with and without the `-bg` option:
+Below a comparison with and without the `-c` option:
 
 ![truesay screenshot](./screenshot-bg.png?raw=true)
 
@@ -92,12 +92,12 @@ this can be overridden by setting the `-t` option to display a given text:
  ```
 
 ### Text position
-The `-pos` option allows to control the text position relative to the image. 
-By default, the text is on top of the image (`-pos top`), 
-but it can also be displayed next to this image (`-pos right`)
+The `-p` option allows to control the text position relative to the image. 
+By default, the text is on top of the image (`-p top`), 
+but it can also be displayed next to this image (`-p right`)
 
 ```bash
-> truesay games/link -t 'Hello world!' -pos right
+> truesay games/link -t 'Hello world!' -p right
 ```
 
 ### Width, margin and padding 
@@ -116,20 +116,20 @@ and the right and left margin (see below).
 
 #### Margin
 `truesay` has 4 margin options to add extra space around its output,
-one for each direction: `-mt` (top), `-mr` (right), `-mb` (bottom), `-ml` (left).
+one for each direction: `-T` (top), `-R` (right), `-B` (bottom), `-L` (left).
 For example, the above command will add one blank line 
 before the text box and one blank column to the left of the image and text box:
 
 ```bash
-> truesay games/link -t 'Hello world!' -mt 1 -ml 1
+> truesay games/link -t 'Hello world!' -T 1 -L 1
 ```
 
 #### Padding
-The padding option `-p` allows to add some extra space 
+The padding option `-P` allows to add some extra space 
 between the text box and the image:
 
 ```bash
-> truesay games/link -t 'Hello world!' -p 1 -pos right
+> truesay games/link -t 'Hello world!' -P 1 -p right
 ```
  
 ### Box style

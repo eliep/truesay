@@ -23,21 +23,21 @@
   "license": "ISC",
   "dependencies": {
     "cli-boxes": "^2.2.1",
-    "commander": "^6.1.0",
-    "get-pixels": "^3.3.2",
+    "commander": "^14.0.0",
+    "get-pixels": "^3.3.3",
     "string-length": "^4.0.1",
     "wrap-ansi": "^7.0.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "sinon": "^9.1.0",
     "eslint": "^7.10.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "mocha": "^8.1.3"
+    "mocha": "^11.7.1",
+    "sinon": "^9.1.0"
   },
   "resolutions": {
     "jpeg-js": "^0.4.0"
